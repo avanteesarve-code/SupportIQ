@@ -25,7 +25,7 @@ async function main() {
 
   await prisma.$transaction([
     prisma.ticketActivity.deleteMany(),
-    prisma.aiResponse.deleteMany(),
+    prisma.aIResponse.deleteMany(),
     prisma.kBChunk.deleteMany(),
     prisma.knowledgeBaseDocument.deleteMany(),
     prisma.ticket.deleteMany(),
