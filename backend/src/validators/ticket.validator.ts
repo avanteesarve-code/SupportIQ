@@ -6,8 +6,8 @@ export const createTicketSchema = z.object({
   title: z.string().trim().min(1, 'title is required'),
   description: z.string().trim().min(1, 'description is required'),
   customerEmail: z.string().email('email must be valid'),
-  categoryId: z.string().uuid('categoryId is required'),
-  priorityId: z.string().uuid('priorityId is required'),
+  categoryId: z.string().uuid('categoryId is invalid').optional(),
+  priorityId: z.string().uuid('priorityId is invalid').optional(),
 });
 
 export const updateTicketStatusSchema = z.object({

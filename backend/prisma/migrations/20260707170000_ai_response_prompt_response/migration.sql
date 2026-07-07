@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "AIResponse"
+ADD COLUMN "prompt" TEXT NOT NULL DEFAULT '',
+ADD COLUMN "response" TEXT NOT NULL DEFAULT '';

@@ -94,6 +94,8 @@ model KBChunk {
 model AIResponse {
   id             String          @id @default(uuid())
   ticketId       String
+  prompt         String
+  response       String
   generatedText  String
   confidenceScore Float?
   status         AIResponseStatus

@@ -1,7 +1,9 @@
-import { Prisma, PriorityLabel, TicketStatus } from '@prisma/client';
+import { AIResponseStatus, Prisma, PriorityLabel, TicketStatus } from '@prisma/client';
 
 import { prisma } from '../config/prisma.js';
+import { classifyTicket } from './ai.service.js';
 import { AppError } from '../utils/appError.js';
+import type { SupportedTicketCategory } from '../types/ai.types.js';
 import type {
   CreateTicketInput,
   TicketListQuery,
@@ -28,32 +30,119 @@ const ticketDetailInclude = {
   },
 };
 
+const categoryResolutionMap: Record<SupportedTicketCategory, string[]> = {
+  'Technical Support': ['Technical Support', 'Technical Issue', 'Account'],
+  Billing: ['Billing'],
+  'Feature Request': ['Feature Request'],
+  'Bug Report': ['Bug Report', 'Technical Issue'],
+  'General Inquiry': ['General Inquiry', 'Other'],
+};
+
+async function resolveCategoryId(categoryName: SupportedTicketCategory, fallbackCategoryId?: string) {
+  const aliases = categoryResolutionMap[categoryName];
+  const category = await prisma.category.findFirst({
+    where: {
+      OR: aliases.map((name) => ({
+        name: {
+          equals: name,
+          mode: 'insensitive',
+        },
+      })),
+    },
+    select: { id: true },
+  });
+
+  if (category?.id) {
+    return category.id;
+  }
+
+  if (!fallbackCategoryId) {
+    return null;
+  }
+
+  const existingFallback = await prisma.category.findUnique({
+    where: { id: fallbackCategoryId },
+    select: { id: true },
+  });
+
+  return existingFallback?.id ?? null;
+}
+
+async function resolvePriorityId(priorityLabel: PriorityLabel, fallbackPriorityId?: string) {
+  const priority = await prisma.priority.findFirst({
+    where: { label: priorityLabel },
+    select: { id: true },
+  });
+
+  if (priority?.id) {
+    return priority.id;
+  }
+
+  if (!fallbackPriorityId) {
+    return null;
+  }
+
+  const existingFallback = await prisma.priority.findUnique({
+    where: { id: fallbackPriorityId },
+    select: { id: true },
+  });
+
+  return existingFallback?.id ?? null;
+}
+
 export async function createTicket(data: CreateTicketInput) {
-  const [category, priority] = await Promise.all([
-    prisma.category.findUnique({ where: { id: data.categoryId } }),
-    prisma.priority.findUnique({ where: { id: data.priorityId } }),
-  ]);
-
-  if (!category) {
-    throw new AppError('Category not found', 404);
-  }
-
-  if (!priority) {
-    throw new AppError('Priority not found', 404);
-  }
-
-  return prisma.ticket.create({
+  const ticket = await prisma.ticket.create({
     data: {
       subject: data.title,
       body: data.description,
       customerEmail: data.customerEmail,
       customerName: data.customerEmail,
-      categoryId: data.categoryId,
-      priorityId: data.priorityId,
       status: TicketStatus.OPEN,
     },
     include: ticketInclude,
   });
+
+  const classification = await classifyTicket({
+    subject: data.title,
+    body: data.description,
+  });
+
+  const [resolvedCategoryId, resolvedPriorityId] = await Promise.all([
+    resolveCategoryId(classification.category, data.categoryId),
+    resolvePriorityId(classification.priority, data.priorityId),
+  ]);
+
+  const updatedTicket = await prisma.ticket.update({
+    where: { id: ticket.id },
+    data: {
+      categoryId: resolvedCategoryId,
+      priorityId: resolvedPriorityId,
+      aiConfidenceCategory: classification.confidenceCategory ?? null,
+      aiConfidencePriority: classification.confidencePriority ?? null,
+    },
+    include: ticketInclude,
+  });
+
+  try {
+    await prisma.aIResponse.create({
+      data: {
+        ticketId: ticket.id,
+        prompt: classification.prompt,
+        response: classification.response,
+        generatedText: classification.reason ?? 'AI classification completed',
+        confidenceScore:
+          classification.confidenceCategory !== undefined &&
+          classification.confidencePriority !== undefined
+            ? (classification.confidenceCategory + classification.confidencePriority) / 2
+            : null,
+        status: AIResponseStatus.SUGGESTED,
+      },
+    });
+  } catch (error) {
+    console.error('Failed to persist AIResponse for ticket:', ticket.id, error);
+  }
+
+  return updatedTicket;
 }
 
 export async function getTickets(query: TicketListQuery) {

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "AIResponse" ALTER COLUMN "prompt" DROP DEFAULT,
+ALTER COLUMN "response" DROP DEFAULT;

@@ -6,11 +6,11 @@ import { PrismaClient, PriorityLabel, UserRole } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const categories = [
+  { name: 'Technical Support', description: 'Login issues, configuration help, and troubleshooting.' },
   { name: 'Billing', description: 'Invoices, payments, refunds, and account charges.' },
-  { name: 'Technical Issue', description: 'Application defects, outages, and bug reports.' },
-  { name: 'Account', description: 'Login, profile, access, and account management issues.' },
   { name: 'Feature Request', description: 'Requests for new capabilities or product improvements.' },
-  { name: 'Other', description: 'Requests that do not fit the primary support categories.' },
+  { name: 'Bug Report', description: 'Application defects, outages, and reproducible errors.' },
+  { name: 'General Inquiry', description: 'General questions that do not require specialized handling.' },
 ];
 
 const priorities = [
