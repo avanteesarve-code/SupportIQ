@@ -8,8 +8,159 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  createdAt DateTime @default(now())
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique
+  passwordHash    String
+  role            UserRole
+  createdAt       DateTime @default(now())
+
+  assignedTickets Ticket[] @relation("AssignedAgentTickets")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+
+  tickets     Ticket[]
+  documents   KnowledgeBaseDocument[]
+  rollups     AnalyticsDailyRollup[]
+}
+
+model Priority {
+  id        String         @id @default(uuid())
+  label     PriorityLabel
+  rank      Int
+
+  tickets   Ticket[]
+  rollups   AnalyticsDailyRollup[]
+}
+
+model Ticket {
+  id                   String      @id @default(uuid())
+  subject              String
+  body                 String
+  customerName         String
+  customerEmail        String
+  status               TicketStatus
+  categoryId           String?
+  priorityId           String?
+  assignedAgentId      String?
+  aiConfidenceCategory Float?
+  aiConfidencePriority Float?
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  category             Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  priority             Priority?   @relation(fields: [priorityId], references: [id], onDelete: SetNull)
+  assignedAgent        User?       @relation("AssignedAgentTickets", fields: [assignedAgentId], references: [id], onDelete: SetNull)
+  aiResponses          AIResponse[]
+  activities           TicketActivity[]
+
+  @@index([status])
+  @@index([categoryId])
+  @@index([priorityId])
+  @@index([assignedAgentId])
+  @@index([createdAt])
+}
+
+model KnowledgeBaseDocument {
+  id         String   @id @default(uuid())
+  title      String
+  content    String
+  categoryId String?
+  createdAt  DateTime @default(now())
+
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  chunks     KBChunk[]
+
+  @@index([categoryId])
+}
+
+model KBChunk {
+  id         String   @id @default(uuid())
+  documentId String
+  chunkText  String
+  chunkIndex Int
+  embedding  String?
+  createdAt  DateTime @default(now())
+
+  document   KnowledgeBaseDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+}
+
+model AIResponse {
+  id             String          @id @default(uuid())
+  ticketId       String
+  generatedText  String
+  confidenceScore Float?
+  status         AIResponseStatus
+  createdAt      DateTime        @default(now())
+
+  ticket         Ticket          @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+}
+
+model TicketActivity {
+  id         String            @id @default(uuid())
+  ticketId   String
+  actorType  ActivityActorType
+  actorId    String?
+  action     String
+  detail     Json?
+  createdAt  DateTime          @default(now())
+
+  ticket     Ticket            @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+}
+
+model AnalyticsDailyRollup {
+  id                   String   @id @default(uuid())
+  date                 DateTime
+  categoryId           String?
+  priorityId           String?
+  ticketCount          Int
+  avgResolutionMinutes Float?
+  aiAcceptanceRate     Float?
+
+  category             Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  priority             Priority? @relation(fields: [priorityId], references: [id], onDelete: SetNull)
+
+  @@index([date])
+}
+
+enum UserRole {
+  AGENT
+  ADMIN
+}
+
+enum PriorityLabel {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum AIResponseStatus {
+  SUGGESTED
+  ACCEPTED
+  EDITED
+  REJECTED
+}
+
+enum ActivityActorType {
+  SYSTEM
+  AI
+  AGENT
 }
