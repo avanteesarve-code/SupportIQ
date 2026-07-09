@@ -18,11 +18,21 @@ const ticketInclude = {
 const ticketDetailInclude = {
   category: true,
   priority: true,
+
+  assignedAgent: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+  },
+
   aiResponses: {
     orderBy: {
       createdAt: 'desc' as const,
     },
   },
+
   activities: {
     orderBy: {
       createdAt: 'desc' as const,
@@ -215,10 +225,15 @@ export async function getTickets(query: TicketListQuery) {
 }
 
 export async function getTicketById(id: string) {
-  return prisma.ticket.findUnique({
-    where: { id },
-    include: ticketDetailInclude,
-  });
+  try {
+    return await prisma.ticket.findUnique({
+      where: { id },
+      include: ticketDetailInclude,
+    });
+  } catch (error) {
+    console.error('GET TICKET ERROR:', error);
+    throw error;
+  }
 }
 
 export async function updateTicketStatus(id: string, data: UpdateTicketStatusInput) {

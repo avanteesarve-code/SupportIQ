@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import type { Ticket } from '@/types/ticket';
+import { StatusBadge } from '@/components/tickets/status-badge';
+import { PriorityBadge } from '@/components/tickets/priority-badge';
 
 interface TicketTableProps {
   tickets: Ticket[];
@@ -38,7 +40,9 @@ export function TicketTable({
               </td>
 
               <td className="p-3">
-                {ticket.status}
+                <StatusBadge
+                  status={ticket.status}
+                />
               </td>
 
               <td className="p-3">
@@ -46,8 +50,12 @@ export function TicketTable({
               </td>
 
               <td className="p-3">
-                {ticket.priority?.label ?? '-'}
-              </td>
+  <PriorityBadge
+    priority={
+      ticket.priority?.label ?? 'LOW'
+    }
+  />
+</td>
             </tr>
           ))}
         </tbody>

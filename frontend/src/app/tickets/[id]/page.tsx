@@ -1,6 +1,14 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
+import { StatusSelector } from '@/components/tickets/status-selector';
 import { useTicket } from '@/hooks/use-ticket';
+import { updateTicketStatus } from '@/services/ticket.service';
+import { StatusBadge } from '@/components/tickets/status-badge';
+import { PriorityBadge } from '@/components/tickets/priority-badge';
+import { AIInsightsCard } from '@/components/tickets/ai-insights-card';
+import { AssignedAgentCard } from '@/components/tickets/assigned-agent-card';
 
 interface TicketDetailsPageProps {
   params: Promise<{
@@ -23,8 +31,38 @@ function TicketDetailsContent({
 }: {
   id: string;
 }) {
-  const { ticket, loading } =
-    useTicket(id);
+  const { ticket, loading } = useTicket(id);
+
+  const [status, setStatus] =
+    useState('');
+
+  useEffect(() => {
+    if (ticket) {
+      setStatus(ticket.status);
+    }
+  }, [ticket]);
+
+  async function handleStatusChange(
+    newStatus: string,
+  ) {
+    try {
+      setStatus(newStatus);
+
+      await updateTicketStatus(
+        ticket!.id,
+        newStatus,
+      );
+    } catch (error) {
+      console.error(
+        'Failed to update status:',
+        error,
+      );
+
+      alert(
+        'Failed to update ticket status',
+      );
+    }
+  }
 
   if (loading) {
     return (
@@ -63,20 +101,50 @@ function TicketDetailsContent({
           {ticket.body}
         </p>
 
-        <p>
-          <strong>Status:</strong>{' '}
-          {ticket.status}
-        </p>
+        <div className="flex items-center gap-3">
+  <strong>Status:</strong>
+
+  <StatusSelector
+    value={status}
+    onChange={handleStatusChange}
+  />
+
+  <StatusBadge status={status} />
+</div>
 
         <p>
           <strong>Category:</strong>{' '}
           {ticket.category?.name}
         </p>
 
-        <p>
-          <strong>Priority:</strong>{' '}
-          {ticket.priority?.label}
-        </p>
+        <div className="flex items-center gap-3">
+  <strong>Priority:</strong>
+
+  <PriorityBadge
+    priority={
+      ticket.priority?.label ?? 'LOW'
+    }
+  />
+  <AIInsightsCard
+  category={ticket.category?.name}
+  priority={ticket.priority?.label}
+  categoryConfidence={
+    ticket.aiConfidenceCategory
+  }
+  priorityConfidence={
+    ticket.aiConfidencePriority
+  }
+  reasoning={
+    ticket.aiResponses?.[0]
+      ?.generatedText
+  }
+/>
+
+<AssignedAgentCard
+  agent={ticket.assignedAgent}
+/>
+
+</div>
       </div>
     </main>
   );

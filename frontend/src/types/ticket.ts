@@ -6,8 +6,18 @@ export interface Ticket {
   createdAt: string;
   updatedAt: string;
 
-customerName?: string;
-customerEmail?: string;
+  customerName?: string;
+  customerEmail?: string;
+
+  aiConfidenceCategory?: number;
+  aiConfidencePriority?: number;
+
+  aiResponses?: {
+    id: string;
+    generatedText: string;
+    confidenceScore: number;
+    status: string;
+  }[];
 
   category?: {
     id: string;
