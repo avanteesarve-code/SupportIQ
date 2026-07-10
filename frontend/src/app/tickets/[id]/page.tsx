@@ -8,6 +8,7 @@ import { StatusBadge } from '@/components/tickets/status-badge';
 import { PriorityBadge } from '@/components/tickets/priority-badge';
 import { AIInsightsCard } from '@/components/tickets/ai-insights-card';
 import { AssignedAgentCard } from '@/components/tickets/assigned-agent-card';
+import { ActivityTimeline } from '@/components/tickets/activity-timeline';
 
 interface TicketDetailsPageProps {
   params: {
@@ -143,6 +144,10 @@ function TicketDetailsContent({
 
 <AssignedAgentCard
   agent={ticket.assignedAgent}
+/>
+
+<ActivityTimeline
+  activities={ticket.activities}
 />
 
 </div>

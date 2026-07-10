@@ -1,3 +1,13 @@
+export interface TicketActivity {
+  id: string;
+  ticketId: string;
+  actorType: 'SYSTEM' | 'AI' | 'AGENT';
+  actorId: string | null;
+  action: string;
+  detail: Record<string, unknown> | null;
+  createdAt: string;
+}
+
 export interface Ticket {
   id: string;
   subject: string;
@@ -34,4 +44,6 @@ export interface Ticket {
     name: string;
     email: string;
   };
+
+  activities?: TicketActivity[];
 }
