@@ -1,13 +1,20 @@
 import { z } from 'zod';
 
 import { assertGeminiApiKey } from '../config/env.js';
+import { retrieveRelevantKnowledge } from './kb-retrieval.service.js';
+
 import type {
   TicketAnalysisInput,
   TicketAnalysisResult,
   TicketClassificationInput,
   TicketClassificationResult,
+  TicketReplySuggestionResult,
 } from '../types/ai.types.js';
-import { supportedTicketCategories, supportedTicketPriorities } from '../types/ai.types.js';
+
+import {
+  supportedTicketCategories,
+  supportedTicketPriorities,
+} from '../types/ai.types.js';
 
 const GEMINI_MODEL = 'gemini-2.5-flash';
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
@@ -25,7 +32,10 @@ const analysisSchema = z.object({
   recommendedAction: z.string().trim().min(1),
 });
 
-const fallbackClassification: Pick<TicketClassificationResult, 'category' | 'priority'> = {
+const fallbackClassification: Pick<
+  TicketClassificationResult,
+  'category' | 'priority'
+> = {
   category: 'General Inquiry',
   priority: 'MEDIUM',
 };
@@ -63,6 +73,28 @@ function buildAnalysisPrompt(input: TicketAnalysisInput) {
     '',
     `Subject: ${input.subject}`,
     `Body: ${input.body}`,
+  ].join('\n');
+}
+
+function buildReplySuggestionPrompt(
+  subject: string,
+  body: string,
+  knowledgeContext: string,
+) {
+  return [
+    'You are an expert customer support agent.',
+    'Generate a professional support response.',
+    'Use the provided knowledge base information whenever relevant.',
+    'Do not mention the knowledge base.',
+    'Be concise, helpful, and actionable.',
+    '',
+    'KNOWLEDGE BASE CONTEXT:',
+    knowledgeContext,
+    '',
+    `Subject: ${subject}`,
+    `Customer Message: ${body}`,
+    '',
+    'Generate only the reply text.',
   ].join('\n');
 }
 
@@ -137,7 +169,10 @@ export async function classifyTicket(
       ...fallbackClassification,
       prompt,
       response: JSON.stringify({
-        error: error instanceof Error ? error.message : 'Unknown AI classification error',
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unknown AI classification error',
       }),
       usedFallback: true,
     };
@@ -161,9 +196,60 @@ export async function generateTicketAnalysis(
     console.error('Ticket analysis failed:', error);
 
     return {
-      summary: `${input.subject.trim()}. ${input.body.trim().slice(0, 120)}`.trim(),
+      summary: `${input.subject.trim()}. ${input.body
+        .trim()
+        .slice(0, 120)}`.trim(),
       recommendedAction:
         'Review ticket details, contact the customer for clarification, and proceed with standard troubleshooting.',
+    };
+  }
+}
+
+export async function generateSuggestedReply(
+  subject: string,
+  body: string,
+): Promise<TicketReplySuggestionResult> {
+  try {
+    const retrievedChunks = await retrieveRelevantKnowledge(
+      `${subject} ${body}`,
+      3,
+    );
+
+    const knowledgeContext = retrievedChunks
+      .map(
+        (chunk) =>
+          `[${chunk.documentTitle}]\n${chunk.chunkText}`,
+      )
+      .join('\n\n');
+
+    const prompt = buildReplySuggestionPrompt(
+      subject,
+      body,
+      knowledgeContext,
+    );
+
+    const suggestedReply = await callGemini(prompt);
+
+    return {
+      suggestedReply,
+      knowledgeSources: [
+        ...new Set(
+          retrievedChunks.map(
+            (chunk) => chunk.documentTitle,
+          ),
+        ),
+      ],
+    };
+  } catch (error) {
+    console.error(
+      'Suggested reply generation failed:',
+      error,
+    );
+
+    return {
+      suggestedReply:
+        'Thank you for contacting support. We have received your request and our team will review it shortly.',
+      knowledgeSources: [],
     };
   }
 }

@@ -36,3 +36,7 @@ export interface TicketAnalysisResult {
   summary: string;
   recommendedAction: string;
 }
+export interface TicketReplySuggestionResult {
+  suggestedReply: string;
+  knowledgeSources: string[];
+}
