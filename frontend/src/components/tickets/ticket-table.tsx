@@ -15,14 +15,14 @@ export function TicketTable({
   const router = useRouter();
 
   return (
-    <div className="rounded-lg border">
-      <table className="w-full">
+    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+      <table className="w-full text-gray-900 dark:text-white">
         <thead>
-          <tr className="border-b">
-            <th className="p-3 text-left">Subject</th>
-            <th className="p-3 text-left">Status</th>
-            <th className="p-3 text-left">Category</th>
-            <th className="p-3 text-left">Priority</th>
+          <tr className="border-b border-gray-200 dark:border-zinc-800">
+            <th className="p-3 text-left text-gray-600 dark:text-zinc-400">Subject</th>
+            <th className="p-3 text-left text-gray-600 dark:text-zinc-400">Status</th>
+            <th className="p-3 text-left text-gray-600 dark:text-zinc-400">Category</th>
+            <th className="p-3 text-left text-gray-600 dark:text-zinc-400">Priority</th>
           </tr>
         </thead>
 
@@ -30,7 +30,7 @@ export function TicketTable({
           {tickets.map((ticket) => (
             <tr
               key={ticket.id}
-              className="border-b cursor-pointer hover:bg-muted"
+              className="cursor-pointer border-b border-gray-200 hover:bg-gray-100 dark:border-zinc-800 dark:hover:bg-zinc-900"
               onClick={() =>
                 router.push(`/tickets/${ticket.id}`)
               }

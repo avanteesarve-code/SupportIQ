@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createTicket } from '@/services/ticket.service';
+import { toast } from 'sonner';
 
 export default function CreateTicketPage() {
   const [formData, setFormData] = useState({
@@ -38,9 +39,11 @@ export default function CreateTicketPage() {
       const ticket = await createTicket(
         formData,
       );
-
+      toast.success('Ticket created successfully');
+      
       router.push(`/tickets/${ticket.id}`);
     } catch (error) {
+      toast.error('Failed to create ticket');
       console.error(
         'Failed to create ticket:',
         error,
@@ -51,13 +54,13 @@ export default function CreateTicketPage() {
   }
 
   return (
-    <main className="container mx-auto p-6">
+    <main className="container mx-auto bg-white p-6 text-gray-900 dark:bg-black dark:text-white">
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Create Ticket
         </h1>
 
-        <p className="mt-2 text-muted-foreground">
+        <p className="mt-2 text-gray-600 dark:text-zinc-400">
           Submit a support request for AI-powered
           classification and assignment.
         </p>
@@ -67,7 +70,7 @@ export default function CreateTicketPage() {
           className="mt-8 space-y-6"
         >
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
               Title
             </label>
 
@@ -77,12 +80,12 @@ export default function CreateTicketPage() {
               value={formData.title}
               onChange={handleChange}
               placeholder="Enter ticket title"
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder:text-gray-500 shadow-sm outline-none transition focus:ring-2 focus:ring-slate-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-500 dark:focus:ring-white"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
               Description
             </label>
 
@@ -92,12 +95,12 @@ export default function CreateTicketPage() {
               value={formData.description}
               onChange={handleChange}
               placeholder="Describe the issue..."
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder:text-gray-500 shadow-sm outline-none transition focus:ring-2 focus:ring-slate-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-500 dark:focus:ring-white"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
               Customer Email
             </label>
 
@@ -107,14 +110,14 @@ export default function CreateTicketPage() {
               value={formData.customerEmail}
               onChange={handleChange}
               placeholder="customer@example.com"
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder:text-gray-500 shadow-sm outline-none transition focus:ring-2 focus:ring-slate-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-500 dark:focus:ring-white"
             />
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="rounded-md bg-black px-4 py-2 text-white disabled:opacity-50"
+            className="rounded-md bg-slate-900 px-4 py-2 text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
           >
             {isSubmitting
               ? 'Creating...'

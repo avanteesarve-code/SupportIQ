@@ -12,7 +12,7 @@ export function OverviewCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-sm text-muted-foreground">
+        <CardTitle className="text-sm text-gray-600 dark:text-zinc-400">
           {title}
         </CardTitle>
       </CardHeader>

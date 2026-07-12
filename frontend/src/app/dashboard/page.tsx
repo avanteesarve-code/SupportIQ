@@ -13,10 +13,10 @@ export default function DashboardPage() {
   } = useDashboardData();
 
   return (
-    <main className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold">SupportIQ Dashboard</h1>
+    <main className="container mx-auto bg-white p-6 text-gray-900 dark:bg-black dark:text-white">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white">SupportIQ Dashboard</h1>
 
-      <p className="mt-2 text-muted-foreground">
+      <p className="mt-2 text-gray-600 dark:text-zinc-400">
         Admin analytics and ticket monitoring
       </p>
 
@@ -48,7 +48,7 @@ export default function DashboardPage() {
       </div>
 
       <section className="mt-8">
-        <h2 className="mb-4 text-xl font-semibold">
+        <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
           Agent Workloads
         </h2>
 
@@ -56,7 +56,7 @@ export default function DashboardPage() {
       </section>
 
       <section className="mt-8">
-        <h2 className="mb-4 text-xl font-semibold">
+        <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
           Category Distribution
         </h2>
 

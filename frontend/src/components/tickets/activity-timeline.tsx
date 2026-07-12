@@ -42,12 +42,12 @@ export function ActivityTimeline({
 }: ActivityTimelineProps) {
   if (activities.length === 0) {
     return (
-      <div className="rounded-lg border p-6">
+      <div className="rounded-lg border border-gray-200 bg-white p-6 text-gray-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white">
         <h3 className="mb-4 font-semibold">
           Activity Timeline
         </h3>
 
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-gray-600 dark:text-zinc-400">
           No activity available.
         </p>
       </div>
@@ -55,7 +55,7 @@ export function ActivityTimeline({
   }
 
   return (
-    <div className="rounded-lg border p-6">
+    <div className="rounded-lg border border-gray-200 bg-white p-6 text-gray-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white">
       <h3 className="mb-6 font-semibold">
         Activity Timeline
       </h3>
@@ -66,23 +66,19 @@ export function ActivityTimeline({
             key={activity.id}
             className="relative pl-10"
           >
-            
-            <div className="absolute left-0 top-1 h-4 w-4 rounded-full border-2 border-white bg-blue-500 shadow" />
+            <div className="absolute left-0 top-1 h-4 w-4 rounded-full border-2 border-white bg-slate-900 shadow dark:border-zinc-950 dark:bg-white" />
 
-            
             {index !== activities.length - 1 && (
-              <div className="absolute left-[7px] top-5 h-full w-0.5 bg-gray-300" />
+              <div className="absolute left-[7px] top-5 h-full w-0.5 bg-gray-200 dark:bg-zinc-800" />
             )}
 
             <p className="font-medium">
               {getActivityMessage(activity)}
             </p>
 
-            <p className="mt-1 text-sm text-muted-foreground">
-  {formatActivityDate(
-    activity.createdAt,
-  )}
-</p>
+            <p className="mt-1 text-sm text-gray-600 dark:text-zinc-400">
+              {formatActivityDate(activity.createdAt)}
+            </p>
           </div>
         ))}
       </div>

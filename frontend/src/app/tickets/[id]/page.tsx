@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from 'react';
+
+import { use, useEffect, useState } from 'react';
 
 import { StatusSelector } from '@/components/tickets/status-selector';
 import { useTicket } from '@/hooks/use-ticket';
@@ -11,17 +12,19 @@ import { AssignedAgentCard } from '@/components/tickets/assigned-agent-card';
 import { ActivityTimeline } from '@/components/tickets/activity-timeline';
 
 interface TicketDetailsPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function TicketDetailsPage({
   params,
 }: TicketDetailsPageProps) {
+  const { id } = use(params);
+
   return (
     <TicketDetailsContent
-      id={params.id}
+      id={id}
     />
   );
 }
@@ -66,8 +69,8 @@ function TicketDetailsContent({
 
   if (loading) {
     return (
-      <main className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold">
+      <main className="container mx-auto bg-white p-6 text-gray-900 dark:bg-black dark:text-white">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Loading Ticket...
         </h1>
       </main>
@@ -76,8 +79,8 @@ function TicketDetailsContent({
 
   if (!ticket) {
     return (
-      <main className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold">
+      <main className="container mx-auto bg-white p-6 text-gray-900 dark:bg-black dark:text-white">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Ticket Not Found
         </h1>
       </main>
@@ -85,72 +88,108 @@ function TicketDetailsContent({
   }
 
   return (
-    <main className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold">
-        Ticket Details
-      </h1>
+  <main className="container mx-auto bg-white p-6 text-gray-900 dark:bg-black dark:text-white">
+    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+      Ticket Details
+    </h1>
 
-      <div className="mt-6 space-y-4">
-        <p>
-          <strong>Subject:</strong>{' '}
-          {ticket.subject}
-        </p>
+    <div className="mt-6 grid gap-6 lg:grid-cols-3">
 
-        <p>
-          <strong>Description:</strong>{' '}
-          {ticket.body}
-        </p>
+      {/* Left Column */}
+      <div className="lg:col-span-2">
+        <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
+          <h2 className="mb-6 text-xl font-semibold text-gray-900 dark:text-white">
+            Ticket Information
+          </h2>
 
-        <div className="flex items-center gap-3">
-  <strong>Status:</strong>
+          <div className="space-y-6">
 
-  <StatusSelector
-    value={status}
-    onChange={handleStatusChange}
-  />
+            <div>
+              <p className="text-sm text-gray-600 dark:text-zinc-400">
+                Subject
+              </p>
 
-  <StatusBadge status={status} />
-</div>
+              <p className="font-medium text-gray-900 dark:text-white">
+                {ticket.subject}
+              </p>
+            </div>
 
-        <p>
-          <strong>Category:</strong>{' '}
-          {ticket.category?.name}
-        </p>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-zinc-400">
+                Description
+              </p>
 
-        <div className="flex items-center gap-3">
-  <strong>Priority:</strong>
+              <p className="text-gray-900 dark:text-white">
+                {ticket.body}
+              </p>
+            </div>
 
-  <PriorityBadge
-    priority={
-      ticket.priority?.label ?? 'LOW'
-    }
-  />
-</div>
+            <div className="flex items-center gap-3">
+              <strong>Status:</strong>
 
-<AIInsightsCard
-  category={ticket.category?.name}
-  priority={ticket.priority?.label}
-  categoryConfidence={
-    ticket.aiConfidenceCategory
-  }
-  priorityConfidence={
-    ticket.aiConfidencePriority
-  }
-  reasoning={
-    ticket.aiResponses?.[0]
-      ?.generatedText
-  }
-/>
+              <StatusSelector
+                value={status}
+                onChange={handleStatusChange}
+              />
 
-<AssignedAgentCard
-  agent={ticket.assignedAgent}
-/>
+              <StatusBadge status={status} />
+            </div>
 
-<ActivityTimeline
-  activities={ticket.activities}
-/>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-zinc-400">
+                Category
+              </p>
 
-</div>
-    </main>
-  );
+              <p className="font-medium text-gray-900 dark:text-white">
+                {ticket.category?.name ?? 'N/A'}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <strong>Priority:</strong>
+
+              <PriorityBadge
+                priority={
+                  ticket.priority?.label ?? 'LOW'
+                }
+              />
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* Right Column */}
+      <div className="space-y-6">
+
+        <AssignedAgentCard
+          agent={ticket.assignedAgent}
+        />
+
+        <AIInsightsCard
+          category={ticket.category?.name}
+          priority={ticket.priority?.label}
+          categoryConfidence={
+            ticket.aiConfidenceCategory
+          }
+          priorityConfidence={
+            ticket.aiConfidencePriority
+          }
+          reasoning={
+            ticket.aiResponses?.[0]
+              ?.generatedText
+          }
+        />
+
+      </div>
+
+    </div>
+
+    <section className="mt-8">
+      <ActivityTimeline
+        activities={ticket.activities}
+      />
+    </section>
+  </main>
+);
 }

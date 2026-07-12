@@ -6,13 +6,10 @@ export function PriorityBadge({
   priority,
 }: PriorityBadgeProps) {
   const styles = {
-    LOW: 'bg-gray-100 text-gray-800',
-    MEDIUM:
-      'bg-blue-100 text-blue-800',
-    HIGH:
-      'bg-orange-100 text-orange-800',
-    URGENT:
-      'bg-red-100 text-red-800',
+    LOW: 'bg-gray-100 text-gray-800 dark:bg-zinc-800 dark:text-zinc-100',
+    MEDIUM: 'bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300',
+    HIGH: 'bg-orange-100 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300',
+    URGENT: 'bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300',
   };
 
   return (
@@ -21,7 +18,7 @@ export function PriorityBadge({
         styles[
           priority as keyof typeof styles
         ] ??
-        'bg-gray-100 text-gray-800'
+        'bg-gray-100 text-gray-800 dark:bg-zinc-800 dark:text-zinc-100'
       }`}
     >
       {priority}

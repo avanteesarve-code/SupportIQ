@@ -14,14 +14,14 @@ export function AIInsightsCard({
   priorityConfidence,
 }: AIInsightsCardProps) {
   return (
-    <div className="rounded-lg border p-4 shadow-sm">
+    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
       <h2 className="mb-4 text-lg font-semibold">
         AI Insights
       </h2>
 
       <div className="space-y-4">
         <div>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-600 dark:text-zinc-400">
             Predicted Category
           </p>
 
@@ -29,7 +29,7 @@ export function AIInsightsCard({
             {category ?? 'N/A'}
           </p>
 
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-600 dark:text-zinc-400">
             Confidence:{' '}
             {categoryConfidence
               ? `${(
@@ -41,7 +41,7 @@ export function AIInsightsCard({
         </div>
 
         <div>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-600 dark:text-zinc-400">
             Predicted Priority
           </p>
 
@@ -49,7 +49,7 @@ export function AIInsightsCard({
             {priority ?? 'N/A'}
           </p>
 
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-600 dark:text-zinc-400">
             Confidence:{' '}
             {priorityConfidence
               ? `${(
@@ -61,7 +61,7 @@ export function AIInsightsCard({
         </div>
 
         <div>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-600 dark:text-zinc-400">
             AI Reasoning
           </p>
 
