@@ -1,129 +1,119 @@
 'use client';
 
 import Link from 'next/link';
-import Image from "next/image";
+import AnimatedCard from '@/components/ui/animated-card';
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-white text-gray-900 dark:bg-black dark:text-white">
       {/* Hero Section */}
-      <section className="mx-auto max-w-7xl px-6 py-24">
+      <section className="mx-auto max-w-7xl px-6 py-16">
         <div className="mx-auto max-w-3xl">
 
           <div className="flex items-center justify-center gap-3 mb-6">
-  <Image
-    src="/logo.png"
-    alt="PRIORO Logo"
-    width={90}
-    height={90}
-  />
 
   <h1 className="text-6xl font-extrabold tracking-tight">
     PRIORO
   </h1>
 </div>
 
-          <p className="mt-4 text-center text-2xl font-semibold text-gray-600 dark:text-zinc-400">
-            AI-Powered Customer Support Ticket Triage
-          </p>
+          <p className="mt-4 text-center text-2xl font-semibold text-teal-600 dark:text-teal-400">
+  AI-Powered Support Ticket Management
+</p>
 
           <p className="mt-6 text-center text-lg text-gray-600 dark:text-zinc-400">
-            Automatically classify, prioritize,
-            assign, and manage customer support
-            tickets using AI.
-          </p>
+  Automatically classify, prioritize, assign,
+  and resolve customer support tickets using
+  AI-driven workflows and intelligent automation.
+</p>
 
           <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
             <Link
   href="/tickets"
-  className="inline-flex items-center justify-center rounded-md border border-zinc-300 bg-white px-6 py-3 font-medium text-black shadow-sm hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700"
+  className="inline-flex items-center justify-center rounded-md border border-teal-600 px-6 py-3 font-medium text-teal-600 transition hover:bg-teal-50 dark:text-teal-400 dark:hover:bg-teal-950/40"
 >
   View Tickets
 </Link>
             <Link
-              href="/tickets/create"
-              className="inline-flex items-center justify-center rounded-md border border-zinc-300 bg-white px-6 py-3 font-medium text-black shadow-sm hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700"
-            >
-              Create Ticket
-            </Link>
+  href="/tickets/create"
+  className="inline-flex items-center justify-center rounded-md bg-teal-600 px-6 py-3 font-medium text-white shadow-sm transition hover:bg-teal-700"
+>
+  Create Ticket
+</Link>
           </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="mx-auto max-w-7xl px-6 py-16">
-        <h2 className="mb-10 text-center text-3xl font-bold text-gray-900 dark:text-white">
-          Key Features
-        </h2>
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
 
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              AI Classification
-            </h3>
+  {[
+    {
+      title: "AI Classification",
+      description:
+        "Automatically categorizes incoming support requests.",
+    },
+    {
+      title: "Priority Detection",
+      description:
+        "Identifies urgent issues and escalations instantly.",
+    },
+    {
+      title: "Auto Assignment",
+      description:
+        "Routes tickets to the most suitable support agent.",
+    },
+    {
+      title: "Knowledge Retrieval",
+      description:
+        "Finds relevant documentation and previous solutions.",
+    },
+    {
+      title: "AI Suggested Replies",
+      description:
+        "Generates contextual responses for faster resolution.",
+    },
+    {
+      title: "Analytics Dashboard",
+      description:
+        "Tracks workload, trends, and team performance.",
+    },
+  ].map((feature, index) => (
+    <AnimatedCard
+      key={feature.title}
+      delay={index * 0.1}
+      className="
+group
+rounded-3xl
+border
+border-teal-200
+bg-white
+p-8
+min-h-[220px]
+flex
+flex-col
+justify-between
+transition-all
+duration-300
+hover:border-teal-500
+hover:shadow-2xl
+dark:border-teal-900
+dark:bg-zinc-950
+"
+    >
+      <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+        {feature.title}
+      </h3>
 
-            <p className="mt-3 text-gray-600 dark:text-zinc-400">
-              Automatically detects ticket
-              category and priority.
-            </p>
-          </div>
+      <p className="mt-3 text-gray-600 dark:text-zinc-400">
+        {feature.description}
+      </p>
+    </AnimatedCard>
+  ))}
+</div>
+       
 
-          <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Auto Assignment
-            </h3>
-
-            <p className="mt-3 text-gray-600 dark:text-zinc-400">
-              Routes tickets to the most suitable
-              support agent.
-            </p>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Analytics & Insights
-            </h3>
-
-            <p className="mt-3 text-gray-600 dark:text-zinc-400">
-              Monitor ticket trends and support
-              performance.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="mx-auto max-w-7xl px-6 py-16">
-        <div className="grid gap-6 md:grid-cols-4">
-          <div className="rounded-lg border border-gray-200 bg-white p-6 text-center dark:border-zinc-800 dark:bg-zinc-950">
-            <p className="text-4xl font-bold text-gray-900 dark:text-white">250+</p>
-            <p className="mt-2 text-gray-600 dark:text-zinc-400">
-              Tickets Processed
-            </p>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6 text-center dark:border-zinc-800 dark:bg-zinc-950">
-            <p className="text-4xl font-bold text-gray-900 dark:text-white">12</p>
-            <p className="mt-2 text-gray-600 dark:text-zinc-400">
-              Support Agents
-            </p>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6 text-center dark:border-zinc-800 dark:bg-zinc-950">
-            <p className="text-4xl font-bold text-gray-900 dark:text-white">94%</p>
-            <p className="mt-2 text-gray-600 dark:text-zinc-400">
-              AI Accuracy
-            </p>
-          </div>
-
-          <div className="rounded-lg border border-gray-200 bg-white p-6 text-center dark:border-zinc-800 dark:bg-zinc-950">
-            <p className="text-4xl font-bold text-gray-900 dark:text-white">2.5h</p>
-            <p className="mt-2 text-gray-600 dark:text-zinc-400">
-              Avg Resolution
-            </p>
-          </div>
-        </div>
-      </section>
+      
 
       {/* CTA */}
       <section className="px-6 py-24 text-center">
