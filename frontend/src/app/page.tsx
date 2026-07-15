@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -8,9 +9,19 @@ export default function Home() {
       {/* Hero Section */}
       <section className="mx-auto max-w-7xl px-6 py-24">
         <div className="mx-auto max-w-3xl">
-          <h1 className="text-center text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Prioro
-          </h1>
+
+          <div className="flex items-center justify-center gap-3 mb-6">
+  <Image
+    src="/logo.png"
+    alt="PRIORO Logo"
+    width={90}
+    height={90}
+  />
+
+  <h1 className="text-6xl font-extrabold tracking-tight">
+    PRIORO
+  </h1>
+</div>
 
           <p className="mt-4 text-center text-2xl font-semibold text-gray-600 dark:text-zinc-400">
             AI-Powered Customer Support Ticket Triage
@@ -24,15 +35,14 @@ export default function Home() {
 
           <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
             <Link
-              href="/tickets"
-              className="rounded-md bg-slate-900 px-6 py-3 font-medium text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
-            >
-              View Tickets
-            </Link>
-
+  href="/tickets"
+  className="inline-flex items-center justify-center rounded-md border border-zinc-300 bg-white px-6 py-3 font-medium text-black shadow-sm hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700"
+>
+  View Tickets
+</Link>
             <Link
               href="/tickets/create"
-              className="rounded-md border border-gray-300 px-6 py-3 font-medium text-gray-900 hover:bg-gray-100 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-900"
+              className="inline-flex items-center justify-center rounded-md border border-zinc-300 bg-white px-6 py-3 font-medium text-black shadow-sm hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700"
             >
               Create Ticket
             </Link>
@@ -127,7 +137,7 @@ export default function Home() {
 
         <Link
           href="/tickets/create"
-          className="mt-8 inline-block rounded-md bg-slate-900 px-6 py-3 font-medium text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+          className="mt-8 inline-flex items-center justify-center rounded-md border border-zinc-300 bg-white px-6 py-3 font-medium text-black shadow-sm hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700"
         >
           Create Ticket
         </Link>

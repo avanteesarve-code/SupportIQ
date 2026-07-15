@@ -114,15 +114,28 @@ export default function CreateTicketPage() {
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="rounded-md bg-slate-900 px-4 py-2 text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
-          >
-            {isSubmitting
-              ? 'Creating...'
-              : 'Create Ticket'}
-          </button>
+          {isSubmitting ? (
+  <div className="flex flex-col items-center justify-center py-8">
+    <div className="loader" />
+
+    <div className="mt-6 text-center">
+      <p className="font-medium text-gray-900 dark:text-white">
+        AI is analyzing your ticket...
+      </p>
+
+      <p className="mt-2 text-sm text-gray-600 dark:text-zinc-400">
+        Classifying issue • Setting priority • Finding best agent
+      </p>
+    </div>
+  </div>
+) : (
+  <button
+    type="submit"
+    className="rounded-md bg-slate-900 px-4 py-2 text-white transition hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+  >
+    Create Ticket
+  </button>
+)}
         </form>
       </div>
     </main>

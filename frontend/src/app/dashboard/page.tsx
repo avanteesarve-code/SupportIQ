@@ -10,11 +10,14 @@ export default function DashboardPage() {
     overview,
     workloads,
     categoryData,
+    loading,
   } = useDashboardData();
 
   return (
     <main className="container mx-auto bg-white p-6 text-gray-900 dark:bg-black dark:text-white">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Prioro Dashboard</h1>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+        Prioro Dashboard
+      </h1>
 
       <p className="mt-2 text-gray-600 dark:text-zinc-400">
         Admin analytics and ticket monitoring
@@ -52,7 +55,13 @@ export default function DashboardPage() {
           Agent Workloads
         </h2>
 
-        <AgentWorkloadTable workloads={workloads} />
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <div className="loader" />
+          </div>
+        ) : (
+          <AgentWorkloadTable workloads={workloads} />
+        )}
       </section>
 
       <section className="mt-8">
@@ -60,7 +69,13 @@ export default function DashboardPage() {
           Category Distribution
         </h2>
 
-        <CategoryDistributionChart data={categoryData} />
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <div className="loader" />
+          </div>
+        ) : (
+          <CategoryDistributionChart data={categoryData} />
+        )}
       </section>
     </main>
   );

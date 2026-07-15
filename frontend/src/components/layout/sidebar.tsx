@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { ThemeToggle } from '@/components/theme-toggle';
+import Image from "next/image";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -36,10 +37,20 @@ export function Sidebar() {
         }`}
       >
         {!collapsed && (
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Prioro
-          </h2>
-        )}
+  <div className="flex items-center gap-3">
+    <Image
+      src="/logo.png"
+      alt="PRIORO Logo"
+      width={36}
+      height={36}
+      className="object-contain"
+    />
+
+    <h1 className="text-2xl font-extrabold tracking-tight">
+      Prioro
+    </h1>
+  </div>
+)}
 
         <button
           type="button"

@@ -23,6 +23,8 @@ export function useDashboardData() {
   const [categoryData, setCategoryData] =
     useState<CategoryDistribution[]>([]);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     async function loadDashboard() {
       try {
@@ -40,6 +42,8 @@ export function useDashboardData() {
         setCategoryData(categoryDistribution);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -50,5 +54,6 @@ export function useDashboardData() {
     overview,
     workloads,
     categoryData,
+    loading,
   };
 }
