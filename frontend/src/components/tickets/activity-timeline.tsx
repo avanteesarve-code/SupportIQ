@@ -4,6 +4,33 @@ interface ActivityTimelineProps {
   activities?: TicketActivity[];
 }
 
+function getActivityIcon(
+  action: string,
+) {
+  switch (action) {
+    case 'TICKET_CREATED':
+      return '🎫';
+
+    case 'AI_CLASSIFIED':
+      return '🧠';
+
+    case 'AUTO_ASSIGNED':
+      return '👤';
+
+    case 'STATUS_UPDATED':
+      return '🔄';
+
+    case 'AI_REPLY_GENERATED':
+      return '✨';
+
+    case 'RESOLVED':
+      return '✅';
+
+    default:
+      return '📌';
+  }
+}
+
 function getActivityMessage(
   activity: TicketActivity,
 ) {
@@ -48,7 +75,8 @@ export function ActivityTimeline({
 }: ActivityTimelineProps) {
   if (activities.length === 0) {
     return (
-      <div className="rounded-2xl border border-[#2a9d8f]/20 bg-white p-6 shadow-lg shadow-[#2a9d8f]/10 dark:bg-zinc-950">
+      <div className="group rounded-2xl border border-gray-200 bg-white p-5 transition-allduration-300 hover:-translate-y-1 
+      hover:border-[#2a9d8f]/50 hover:shadow-xl hover:shadow-[#2a9d8f]/10 dark:border-zinc-800 dark:bg-zinc-950">
         <div className="mb-4 flex items-center gap-2">
           <div className="rounded-full bg-[#2a9d8f]/15 px-3 py-1 text-xs font-medium text-[#2a9d8f]">
             📜 Timeline
@@ -82,10 +110,20 @@ export function ActivityTimeline({
         {activities.map((activity, index) => (
           <div
             key={activity.id}
-            className="relative pl-12"
+            className="relative pl-16"
           >
             <div className="absolute left-0 top-2 flex items-center justify-center">
-              <div className="h-5 w-5 rounded-full border-4 border-[#2a9d8f]/20 bg-[#2a9d8f]" />
+              <div
+  className="
+    flex h-10 w-10 items-center
+    justify-center rounded-full
+    border border-[#2a9d8f]/30
+    bg-[#2a9d8f]/10
+    text-lg
+  "
+>
+  {getActivityIcon(activity.action)}
+</div>
             </div>
 
             {index !== activities.length - 1 && (
@@ -102,6 +140,7 @@ export function ActivityTimeline({
                   activity.createdAt,
                 )}
               </p>
+              
             </div>
           </div>
         ))}
